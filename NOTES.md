@@ -73,3 +73,65 @@ or open `WPF-Learning.sln` in Visual Studio and press F5.
 6. **Q**: What's the WinForms-equivalent of what `Save_Click` is doing here?
    **A**: Exactly the WinForms pattern — read control values directly via their field/`x:Name`
    reference inside the event handler, no binding layer in between. Day 2 replaces this with MVVM.
+
+### Day 1 — Fundamentals Reference (how to build this from a blank project)
+
+**Creating the project in Visual Studio**: File → New Project → "WPF Application" (C#) → name it,
+pick `.NET 8.0 (Long-Term Support)` as the framework → Create. That generates `App.xaml`/`.cs`,
+`MainWindow.xaml`/`.cs`, `AssemblyInfo.cs`, and the `.csproj` — exactly what's in
+`src/Wpf.CustomerManager`. To add a second project to the same solution later (Day 4): right-click
+the **Solution** in Solution Explorer → Add → New Project.
+
+**Solution (`.slnx`) vs project (`.csproj`)**: the solution is just a list of which projects open
+together — you basically never hand-edit it. The `.csproj` is where real config lives:
+`<TargetFramework>net8.0-windows</TargetFramework>` (the `-windows` suffix unlocks WPF/WinForms
+APIs — plain `net8.0` can't see them), `<UseWPF>true</UseWPF>` (the one WPF-specific switch; its
+WinForms equivalent is `<UseWindowsForms>true</UseWindowsForms>`), `<OutputType>WinExe</OutputType>`
+(GUI exe, no console window).
+
+**How XAML connects to code-behind**: `x:Class="Wpf.CustomerManager.MainWindow"` in the `.xaml` and
+`partial class MainWindow : Window` in the `.xaml.cs` are the *same class*, split across two files
+via `partial`. The generated half (hidden in `obj/`) contains `InitializeComponent()`, which creates
+every control you declared and assigns it to a field named by its `x:Name` — that's why
+`txtFirstName` etc. just exist as usable variables with no manual wiring.
+
+**XAML's core rule**: an element = "construct an instance of this class," an attribute = "set this
+property on it." `<TextBox Width="220" />` ≡ `new TextBox { Width = 220 }`. The `xmlns` lines are
+`using` statements: no-prefix = standard WPF controls, `x:` = the XAML language itself (`x:Class`,
+`x:Name`, `x:Key`), `local:` = your own C# namespace.
+
+**Window dimensions**: `Height`/`Width` are plain properties. `WindowStartupLocation` =
+`Manual` (default) / `CenterScreen` / `CenterOwner` (for dialogs). `ResizeMode` = `CanResize`
+(default) / `NoResize` / `CanMinimize` / `CanResizeWithGrip`.
+
+**Grid**: rows × columns. `RowDefinition Height="Auto"` (size to content) / `"*"` (share remaining
+space) / a number (fixed pixels — avoid, doesn't adapt). Children declare their cell via
+`Grid.Row="0" Grid.Column="1"` — written on the *child*, not the `Grid`. This is an **attached
+property**: a property `Grid` defines that any child placed inside it can carry, because the parent
+needs to read "where do you belong" off each child.
+
+**StackPanel**: no grid, just lines children up in order — vertical by default, `Orientation="Horizontal"`
+for a row (used here for the Save/Clear buttons). `DockPanel` (dock children Top/Bottom/Left/Right,
+one fills remaining space) and `Canvas` (absolute X/Y) exist too — recognize them by name for an
+interview, no hands-on time needed yet.
+
+**Controls used so far**:
+- `Label Content="..."` — caption next to an input (`Content` can hold any object; `TextBlock Text="..."`
+  is the plain-string-only equivalent, used for the page header).
+- `TextBox` — free text; `Text="..."` to pre-fill, `TextWrapping="Wrap" AcceptsReturn="True"` + real
+  height for multi-line.
+- `DatePicker` — the calendar dropdown is automatic, nothing to configure to "turn it on." Read the
+  value via `.SelectedDate` (`DateTime?`, nullable).
+- `ComboBox` + `ComboBoxItem Content="..."` — hardcoded options directly in markup, fine for a small
+  fixed list. `SelectedIndex="0"` sets the default. A list sourced from code/DB instead uses
+  `ItemsSource="{Binding ...}"` — that's Day 2.
+
+**Visual Studio's designer isn't a separate skill** — dragging a control from the Toolbox
+(`Ctrl+Alt+X`) onto the design surface, or setting a property via the Properties window (`F4`),
+writes the exact same XAML attributes shown above. Typing XAML directly is just faster once this
+vocabulary is familiar.
+
+**Self-check exercise before Day 2**: by hand, add a `CheckBox` ("Subscribe to newsletter") and a
+multi-line `TextBox` ("Notes") to the form — new `RowDefinition`s, correct `Grid.Row` indices, read
+`.IsChecked`/`.Text` in `Save_Click`. Do it once by typing XAML, once by dragging from the Toolbox,
+confirm they produce the same markup.
