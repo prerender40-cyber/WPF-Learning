@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Target Type (no x:Key) = applies to EVERY control of that type in scope automatically.
+        This only works because Width/Height/Margin/Padding/Background are Dependency Properties,
+        not plain CLR properties - a style is really just a batch of DP value assignments that the
+        WPF property system applies through the same change-notification pipeline as direct setters.
+    -->
+    <Style TargetType="Label">
+        <Setter Property="Width" Value="110" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Width" Value="220" />
+        <Setter Property="Margin" Value="0,4,0,4" />
+        <Setter Property="Padding" Value="4" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+    </Style>
+
+    <Style TargetType="ComboBox">
+        <Setter Property="Width" Value="220" />
+        <Setter Property="Margin" Value="0,4,0,4" />
+    </Style>
+
+    <Style TargetType="DatePicker">
+        <Setter Property="Width" Value="220" />
+        <Setter Property="Margin" Value="0,4,0,4" />
+    </Style>
+
+    <!-- x:Key = opt-in style, e.g. BasedOn a shared look but only for buttons that ask for it. -->
+    <Style x:Key="PrimaryButton" TargetType="Button">
+        <Setter Property="Width" Value="100" />
+        <Setter Property="Height" Value="32" />
+        <Setter Property="Margin" Value="6,0,0,0" />
+        <Setter Property="Background" Value="#2563EB" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <Style x:Key="SecondaryButton" TargetType="Button" BasedOn="{StaticResource PrimaryButton}">
+        <Setter Property="Background" Value="#E5E7EB" />
+        <Setter Property="Foreground" Value="#111827" />
+    </Style>
+
+</ResourceDictionary>
