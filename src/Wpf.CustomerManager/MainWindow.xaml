@@ -1,0 +1,80 @@
+<Window x:Class="Wpf.CustomerManager.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Wpf.CustomerManager"
+        mc:Ignorable="d"
+        Title="Customer Entry — Day 1 (WPF Fundamentals)"
+        Height="480" Width="420"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanMinimize">
+
+    <!--
+        Day 1 goal: layout panels, common controls, and plain code-behind event handling.
+        Deliberately NO data binding here (that's Day 2 / MVVM) - every value below is read
+        straight out of the control via x:Name in the Save_Click handler, the same way you'd
+        have written WinForms code. Compare this file to Day 2's version to feel the difference.
+    -->
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: header -->
+        <TextBlock Grid.Row="0" Text="New Customer" FontSize="20" FontWeight="Bold" Margin="0,0,0,12" />
+
+        <!-- Row 1: the form itself, laid out with a Grid (label column + input column) -->
+        <Grid Grid.Row="1" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0" Grid.Column="0" Content="First Name" />
+            <TextBox Grid.Row="0" Grid.Column="1" x:Name="txtFirstName" />
+
+            <Label Grid.Row="1" Grid.Column="0" Content="Last Name" />
+            <TextBox Grid.Row="1" Grid.Column="1" x:Name="txtLastName" />
+
+            <Label Grid.Row="2" Grid.Column="0" Content="Email" />
+            <TextBox Grid.Row="2" Grid.Column="1" x:Name="txtEmail" />
+
+            <Label Grid.Row="3" Grid.Column="0" Content="Phone" />
+            <TextBox Grid.Row="3" Grid.Column="1" x:Name="txtPhone" />
+
+            <Label Grid.Row="4" Grid.Column="0" Content="Date of Birth" />
+            <DatePicker Grid.Row="4" Grid.Column="1" x:Name="dpDateOfBirth" />
+
+            <Label Grid.Row="5" Grid.Column="0" Content="Customer Type" />
+            <ComboBox Grid.Row="5" Grid.Column="1" x:Name="cboCustomerType" SelectedIndex="0">
+                <ComboBoxItem Content="Regular" />
+                <ComboBoxItem Content="Premium" />
+                <ComboBoxItem Content="VIP" />
+            </ComboBox>
+        </Grid>
+
+        <!-- Row 2: actions, right-aligned via a StackPanel -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,16,0,0">
+            <Button Content="Clear" Style="{StaticResource SecondaryButton}" Click="Clear_Click" />
+            <Button Content="Save" Style="{StaticResource PrimaryButton}" Click="Save_Click" />
+        </StackPanel>
+
+        <!-- Row 3: status / validation feedback -->
+        <Border Grid.Row="3" x:Name="borderStatus" Margin="0,16,0,0" Padding="8" CornerRadius="4"
+                Background="#F3F4F6" Visibility="Collapsed">
+            <TextBlock x:Name="txtStatus" TextWrapping="Wrap" />
+        </Border>
+    </Grid>
+</Window>

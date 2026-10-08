@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Wpf.CustomerManager/Wpf.CustomerManager.csproj" />
+  </Folder>
+</Solution>
